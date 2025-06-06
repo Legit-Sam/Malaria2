@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Medical Diagnosis Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      background: white;
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      background: #e9f5e9;
+      padding: 15px;
+      border-left: 5px solid #28a745;
+      border-radius: 5px;
+    }
+    .result strong {
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>AI Medical Diagnosis Tool</h2>
+
+    <form id="diagnosis-form">
+      <label for="symptoms">Select your symptoms:</label>
+      <select id="symptoms" multiple>
+        <option value="fever">Fever</option>
+        <option value="headache">Headache</option>
+        <option value="chills">Chills</option>
+        <option value="sweating">Sweating</option>
+        <option value="nausea">Nausea</option>
+        <option value="vomiting">Vomiting</option>
+        <option value="diarrhea">Diarrhea</option>
+        <option value="body pain">Body Pain</option>
+        <option value="fatigue">Fatigue</option>
+        <option value="rash">Skin Rash</option>
+      </select>
+
+      <button type="submit">Diagnose</button>
+    </form>
+
+    <div id="output" class="result" style="display:none;"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("diagnosis-form");
+    const output = document.getElementById("output");
+
+    const malariaSymptoms = ["fever", "headache", "chills", "sweating", "nausea", "vomiting", "fatigue"];
+
+    const medications = [
+      { name: "Paracetamol", use: "For fever and pain relief." },
+      { name: "Ibuprofen", use: "For pain and inflammation." },
+      { name: "Oral Rehydration Salts", use: "To prevent dehydration." },
+      { name: "Antihistamine", use: "For mild allergic symptoms." }
+    ];
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const selected = Array.from(document.getElementById("symptoms").selectedOptions).map(o => o.value);
+
+      let matchedSymptoms = selected.filter(symptom => malariaSymptoms.includes(symptom));
+      let diagnosis = "";
+      let action = "For a definitive diagnosis, please consult a healthcare provider.";
+      let medList = "";
+
+      if (matchedSymptoms.length >= 4) {
+        diagnosis = "Based on your symptoms (" + matchedSymptoms.join(", ") + "), you may have malaria.";
+        action = "You should visit a healthcare provider immediately. Do not self-medicate.";
+      } else if (matchedSymptoms.length > 0) {
+        diagnosis = "Some of your symptoms (" + matchedSymptoms.join(", ") + ") suggest a mild possibility of malaria.";
+      } else {
+        diagnosis = "Based on your symptoms: none, your symptoms do not strongly indicate malaria.";
+      }
+
+      medList = "<ul>" + medications.map(med => `<li><strong>${med.name}</strong>: ${med.use}</li>`).join("") + "</ul>";
+
+      output.innerHTML = `
+        <strong>Diagnosis Result</strong><br>
+        ${diagnosis}<br><br>
+        <strong>Recommended Actions</strong><br>
+        ${action}<br><br>
+        <strong>Suggested Medications</strong>
+        ${medList}
+      `;
+      output.style.display = "block";
+    });
+  </script>
+</body>
+</html>
